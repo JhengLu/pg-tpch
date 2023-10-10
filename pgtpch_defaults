@@ -8,8 +8,8 @@ SCALE=100 #GB
 # Other configuration variables
 BASEDIR=$(dirname "$0")
 BASEDIR=$(cd "$BASEDIR"; pwd)
-TPCHTMP=/AXLE/$USER/tpch_tmp
-PGDATADIR=/AXLE/$USER/pgdata${SCALE}GB
+TPCHTMP=/home/$USER/tpch_tmp
+PGDATADIR=/home/$USER/pgdata${SCALE}GB
 PGPORT=5442
 REMAKE_DATA=true
 DB_NAME="tpch"
@@ -18,8 +18,8 @@ CREATE_MIN_INDEXES=false
 CREATE_ALL_INDEXES=true
 PERFDATADIR=perfdata
 CORES=`grep -c ^processor /proc/cpuinfo`
-PGUSER="nobody"
-PGBINDIR=$HOME/bin/postgres-bs128/bin
+PGUSER=$USER
+PGBINDIR=/usr/local/bin
 LOGGING=false
 
 # Install teardown() function to kill any lingering jobs
