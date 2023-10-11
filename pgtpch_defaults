@@ -8,8 +8,8 @@ SCALE=100 #GB
 # Other configuration variables
 BASEDIR=$(dirname "$0")
 BASEDIR=$(cd "$BASEDIR"; pwd)
-TPCHTMP=/home/$USER/tpch_tmp
-PGDATADIR=/home/$USER/pgdata${SCALE}GB
+TPCHTMP=$HOME/tpch_tmp
+PGDATADIR=$HOME/pgdata${SCALE}GB
 PGPORT=5442
 REMAKE_DATA=true
 DB_NAME="tpch"
