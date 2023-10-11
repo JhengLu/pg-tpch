@@ -25,10 +25,11 @@ if [ $# -eq 2 ]; then
   PERFDATADIR="$PERFDATADIR-$2"
 fi
 
-perf_set_kernel_params
+# perf_set_kernel_params
 
 # Start a new instance of Postgres
-sudo -u $PGUSER taskset -c 2 $PGBINDIR/postgres -D "$PGDATADIR" -p $PGPORT &
+# sudo -u $PGUSER taskset -c 2 $PGBINDIR/postgres -D "$PGDATADIR" -p $PGPORT &
+sudo -u $PGUSER $PGBINDIR/postgres -D "$PGDATADIR" -p $PGPORT &
 PGPID=$!
 while ! sudo -u $PGUSER $PGBINDIR/pg_ctl status -D $PGDATADIR | grep "server is running" -q; do
   echo "Waiting for the Postgres server to start"
@@ -56,27 +57,27 @@ sudo -u $PGUSER $PGBINDIR/psql -h /tmp -p $PGPORT -d $DB_NAME <"$BASEDIR/$fa" > 
 restart_drop_caches
 
 ### Collect data with perf to generate callgraph
-echo "Collect data with perf to generate callgraph"
-/usr/bin/time -f '%e\n%Uuser %Ssystem %Eelapsed %PCPU (%Xtext+%Ddata %Mmax)k'\
-  sudo -u $PGUSER perf record -a -C 2 -s -g -m 512 --\
-  $PGBINDIR/psql -h /tmp -p $PGPORT -d $DB_NAME <"$BASEDIR/$f" 2> exectime.txt
-restart_drop_caches
+# echo "Collect data with perf to generate callgraph"
+# /usr/bin/time -f '%e\n%Uuser %Ssystem %Eelapsed %PCPU (%Xtext+%Ddata %Mmax)k'\
+#   sudo -u $PGUSER perf record -a -C 2 -s -g -m 512 --\
+#   $PGBINDIR/psql -h /tmp -p $PGPORT -d $DB_NAME <"$BASEDIR/$f" 2> exectime.txt
+# restart_drop_caches
 
 ### Collect basic stats with perf
-echo "Collect basic stats with perf"
-sudo -u $PGUSER perf stat -a -C 2 -B --log-fd 2 --\
-  $PGBINDIR/psql -h /tmp -p $PGPORT -d $DB_NAME <"$BASEDIR/$f" 2> stats.txt
-restart_drop_caches
+# echo "Collect basic stats with perf"
+# sudo -u $PGUSER perf stat -a -C 2 -B --log-fd 2 --\
+#   $PGBINDIR/psql -h /tmp -p $PGPORT -d $DB_NAME <"$BASEDIR/$f" 2> stats.txt
+# restart_drop_caches
 
 sudo chown $USER:$USER *
 chmod 775 .
 
-cgf="../q${ii}-callgraph.pdf"
-echo "Creating the call graph: $cgf"
-perf script | python "$BASEDIR/gprof2dot.py" -f perf | dot -Tpdf -o $cgf &
+# cgf="../q${ii}-callgraph.pdf"
+# echo "Creating the call graph: $cgf"
+# perf script | python "$BASEDIR/gprof2dot.py" -f perf | dot -Tpdf -o $cgf &
 
 # Statistics collection
-  perf script | python "$BASEDIR/gprof2dot.py" -f perf | python "$BASEDIR/collect_stats.py" $i > q${ii}-breakdown.csv
+#   perf script | python "$BASEDIR/gprof2dot.py" -f perf | python "$BASEDIR/collect_stats.py" $i > q${ii}-breakdown.csv
 
 cd - >/dev/null
 
