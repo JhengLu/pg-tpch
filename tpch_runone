@@ -63,6 +63,11 @@ restart_drop_caches
 #   $PGBINDIR/psql -h /tmp -p $PGPORT -d $DB_NAME <"$BASEDIR/$f" 2> exectime.txt
 # restart_drop_caches
 
+/usr/bin/time -f '%e\n%Uuser %Ssystem %Eelapsed %PCPU (%Xtext+%Ddata %Mmax)k'\
+  sudo -u $PGUSER \
+  $PGBINDIR/psql -h /tmp -p $PGPORT -d $DB_NAME <"$BASEDIR/$f" 2> exectime.txt
+restart_drop_caches
+
 ### Collect basic stats with perf
 # echo "Collect basic stats with perf"
 # sudo -u $PGUSER perf stat -a -C 2 -B --log-fd 2 --\
@@ -88,4 +93,3 @@ for p in $(jobs -p);
 do
   wait $p
 done
-
