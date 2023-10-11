@@ -52,9 +52,9 @@ fe="queries/q$ii.explain.sql"
 fa="queries/q$ii.analyze.sql"
 
 ### Execute query with explain analyze to get query plan
-echo "Execute query with explain analyze to get query plan"
-sudo -u $PGUSER $PGBINDIR/psql -h /tmp -p $PGPORT -d $DB_NAME <"$BASEDIR/$fa" > analyze.txt
-restart_drop_caches
+# echo "Execute query with explain analyze to get query plan"
+# sudo -u $PGUSER $PGBINDIR/psql -h /tmp -p $PGPORT -d $DB_NAME <"$BASEDIR/$fa" > analyze.txt
+# restart_drop_caches
 
 ### Collect data with perf to generate callgraph
 # echo "Collect data with perf to generate callgraph"
