@@ -54,7 +54,8 @@ restart_drop_caches() {
     echo "Restart postgres and drop caches."
     sudo -u $PGUSER $PGBINDIR/pg_ctl stop -D $PGDATADIR
     sync && echo 3 | sudo tee /proc/sys/vm/drop_caches
-    sudo -u $PGUSER taskset -c 2 $PGBINDIR/postgres -D "$PGDATADIR" -p $PGPORT &
+    # sudo -u $PGUSER taskset -c 2 $PGBINDIR/postgres -D "$PGDATADIR" -p $PGPORT &
+    sudo -u $PGUSER $PGBINDIR/postgres -D "$PGDATADIR" -p $PGPORT &
     PGPID=$!
     while ! sudo -u $PGUSER $PGBINDIR/pg_ctl status -D $PGDATADIR | grep "server is running" -q; do
         echo "Waiting for the Postgres server to start"
