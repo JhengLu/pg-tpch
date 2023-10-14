@@ -29,12 +29,14 @@ fi
 
 # Start a new instance of Postgres
 # sudo -u $PGUSER taskset -c 2 $PGBINDIR/postgres -D "$PGDATADIR" -p $PGPORT &
-sudo -u $PGUSER $PGBINDIR/postgres -D "$PGDATADIR" -p $PGPORT &
-PGPID=$!
-while ! sudo -u $PGUSER $PGBINDIR/pg_ctl status -D $PGDATADIR | grep "server is running" -q; do
-  echo "Waiting for the Postgres server to start"
-  sleep 1
-done
+if [ -z "$(pgrep -n postgres)" ]; then
+  sudo -u $PGUSER $PGBINDIR/postgres -D "$PGDATADIR" -p $PGPORT &
+  PGPID=$!
+  while ! sudo -u $PGUSER $PGBINDIR/pg_ctl status -D $PGDATADIR | grep "server is running" -q; do
+    echo "Waiting for the Postgres server to start"
+    sleep 1
+  done
+fi
 
 # wait for it to finish starting
 sleep 5
@@ -66,7 +68,7 @@ fa="queries/q$ii.analyze.sql"
 /usr/bin/time -f '%e\n%Uuser %Ssystem %Eelapsed %PCPU (%Xtext+%Ddata %Mmax)k'\
   sudo -u $PGUSER \
   $PGBINDIR/psql -h /tmp -p $PGPORT -d $DB_NAME <"$BASEDIR/$f" 2> exectime.txt
-restart_drop_caches
+# restart_drop_caches
 
 ### Collect basic stats with perf
 # echo "Collect basic stats with perf"
@@ -87,9 +89,9 @@ chmod 775 .
 cd - >/dev/null
 
 # Stop the server
-sudo -u $PGUSER $PGBINDIR/pg_ctl stop -D $PGDATADIR
+# sudo -u $PGUSER $PGBINDIR/pg_ctl stop -D $PGDATADIR
 
-for p in $(jobs -p);
-do
-  wait $p
-done
+# for p in $(jobs -p);
+# do
+#   wait $p
+# done
