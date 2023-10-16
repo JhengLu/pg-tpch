@@ -29,18 +29,16 @@ fi
 
 # Start a new instance of Postgres
 # sudo -u $PGUSER taskset -c 2 $PGBINDIR/postgres -D "$PGDATADIR" -p $PGPORT &
-if [ -z "$(pgrep -n postgres)" ]; then
-  sudo -u $PGUSER $PGBINDIR/postgres -D "$PGDATADIR" -p $PGPORT &
-  PGPID=$!
-  while ! sudo -u $PGUSER $PGBINDIR/pg_ctl status -D $PGDATADIR | grep "server is running" -q; do
-    echo "Waiting for the Postgres server to start"
-    sleep 1
-  done
-fi
+sudo -u $PGUSER $PGBINDIR/postgres -D "$PGDATADIR" -p $PGPORT &
+PGPID=$!
+while ! sudo -u $PGUSER $PGBINDIR/pg_ctl status -D $PGDATADIR | grep "server is running" -q; do
+  echo "Waiting for the Postgres server to start"
+  sleep 1
+done
 
 # wait for it to finish starting
 sleep 5
-# echo "Postgres running, pid $PGPID"
+echo "Postgres running, pid $PGPID"
 
 ii=$(printf "%02d" $1)
 dir="$PERFDATADIR/q${ii}"
