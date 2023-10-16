@@ -31,7 +31,7 @@ teardown() {
   JOBS=$(jobs -p)
   test -z "$JOBS" || kill -9 $JOBS
 }
-# test -z "${DEBUG-}" && trap "teardown" EXIT
+test -z "${DEBUG-}" && trap "teardown" EXIT
 
 # Set up perf
 perf_set_kernel_params() {
