@@ -40,7 +40,7 @@ fi
 
 # wait for it to finish starting
 sleep 5
-echo "Postgres running, pid $PGPID"
+# echo "Postgres running, pid $PGPID"
 
 ii=$(printf "%02d" $1)
 dir="$PERFDATADIR/q${ii}"
